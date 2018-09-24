@@ -3,7 +3,7 @@ pipeline {
         label "jenkins-go"
     }
     environment {
-      ORG               = 'cpwc'
+      ORG               = 'viddsee-bot'
       APP_NAME          = 'golang-http'
       GIT_PROVIDER      = 'github.com'
       CHARTMUSEUM_CREDS = credentials('jenkins-chartmuseum')
@@ -19,7 +19,7 @@ pipeline {
           HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
         }
         steps {
-          dir ('/home/jenkins/go/src/github.com/cpwc/golang-http') {
+          dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http') {
             checkout scm
             container('go') {
               sh "make linux"
@@ -29,7 +29,7 @@ pipeline {
               sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
             }
           }
-          dir ('/home/jenkins/go/src/github.com/cpwc/golang-http/charts/preview') {
+          dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http/charts/preview') {
             container('go') {
               sh "make preview"
               sh "jx preview --app $APP_NAME --dir ../.."
@@ -43,10 +43,10 @@ pipeline {
         }
         steps {
           container('go') {
-            dir ('/home/jenkins/go/src/github.com/cpwc/golang-http') {
+            dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http') {
               checkout scm
             }
-            dir ('/home/jenkins/go/src/github.com/cpwc/golang-http/charts/golang-http') {
+            dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http/charts/golang-http') {
                 // ensure we're not on a detached head
                 sh "git checkout master"
                 // until we switch to the new kubernetes / jenkins credential implementation use git credentials store
@@ -54,14 +54,14 @@ pipeline {
 
                 sh "jx step git credentials"
             }
-            dir ('/home/jenkins/go/src/github.com/cpwc/golang-http') {
+            dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http') {
               // so we can retrieve the version in later steps
               sh "echo \$(jx-release-version) > VERSION"
             }
-            dir ('/home/jenkins/go/src/github.com/cpwc/golang-http/charts/golang-http') {
+            dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http/charts/golang-http') {
               sh "make tag"
             }
-            dir ('/home/jenkins/go/src/github.com/cpwc/golang-http') {
+            dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http') {
               container('go') {
                 sh "make build"
                 sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
@@ -77,7 +77,7 @@ pipeline {
           branch 'master'
         }
         steps {
-          dir ('/home/jenkins/go/src/github.com/cpwc/golang-http/charts/golang-http') {
+          dir ('/home/jenkins/go/src/github.com/viddsee-bot/golang-http/charts/golang-http') {
             container('go') {
               sh 'jx step changelog --version v\$(cat ../../VERSION)'
 
