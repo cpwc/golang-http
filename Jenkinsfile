@@ -6,7 +6,7 @@ pipeline {
       ORG               = 'cpwc'
       APP_NAME          = 'golang-http'
       GIT_PROVIDER      = 'github.com'
-      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+      CHARTMUSEUM_CREDS = credentials('jenkins-chartmuseum')
     }
     stages {
       stage('CI Build and push snapshot') {
