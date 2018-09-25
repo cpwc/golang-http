@@ -5,7 +5,7 @@ build:
     envTemplate:
       template: "{{.DOCKER_REGISTRY}}/viddsee-bot/golang-http:{{.VERSION}}"
   artifacts:
-  - imageName: changeme
+  - imageName: golang-http
     workspace: .
     docker: {}
   local: {}
