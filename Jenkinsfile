@@ -6,7 +6,7 @@ pipeline {
       ORG               = 'viddsee-bot'
       APP_NAME          = 'golang-http'
       GIT_PROVIDER      = 'github.com'
-      CHARTMUSEUM_CREDS = credentials('jenkins-chartmuseum')
+      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
     stages {
       stage('CI Build and push snapshot') {
