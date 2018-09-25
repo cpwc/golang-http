@@ -1,4 +1,4 @@
-CHART_REPO := http://jenkins-x-chartmuseum:8080
+CHART_REPO := https://charts.k8s.vidds.ee
 CURRENT=$(pwd)
 NAME := golang-http
 OS := $(shell uname)
