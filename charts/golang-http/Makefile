@@ -36,7 +36,7 @@ ifeq ($(OS),Darwin)
 	sed -i "" -e "s/tag: .*/tag: $(VERSION)/" values.yaml
 else ifeq ($(OS),Linux)
 	sed -i -e "s/version:.*/version: $(VERSION)/" Chart.yaml
-	sed -i -e "s|repository: .*|repository: $(DOCKER_REGISTRY)\/cpwc\/$(NAME)|" values.yaml
+	sed -i -e "s|repository: .*|repository: $(DOCKER_REGISTRY)\/viddsee-bot\/$(NAME)|" values.yaml
 	sed -i -e "s/tag: .*/tag: $(VERSION)/" values.yaml
 else
 	echo "platfrom $(OS) not supported to tag with"
