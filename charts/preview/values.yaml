@@ -5,7 +5,7 @@ expose:
   config:
     exposer: Ingress
     http: true
-    tls-acme: true
+    tlsacme: true
 
 cleanup:
   Args:
