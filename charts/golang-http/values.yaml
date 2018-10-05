@@ -1,19 +1,40 @@
-# Default values for Go projects.
+# Default values for golang-http.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
+
+priorityClassName: ""
+
+# Affinity for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+# affinity: {}
+
+# Tolerations for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+#  - key: "key"
+#    operator: "Equal|Exists"
+#    value: "value"
+#    effect: "NoSchedule|PreferNoSchedule|NoExecute"
+
+# Node labels for pod assignment
+# Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+podAnnotations: {}
+
+podLabels: {}
+
 image:
   repository: draft
   tag: dev
   pullPolicy: IfNotPresent
+
 service:
-  name: golang-http
   type: ClusterIP
-  externalPort: 80
-  internalPort: 8080
-  annotations:
-    fabric8.io/expose: "true"
-    fabric8.io/ingress.annotations: "kubernetes.io/ingress.class: nginx"
+  port: 8080
+  annotations: {}
+
 resources:
   limits:
     cpu: 100m
@@ -21,44 +42,26 @@ resources:
   requests:
     cpu: 80m
     memory: 128Mi
-probePath: /
-livenessProbe:
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 1
-readinessProbe:
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 1
-terminationGracePeriodSeconds: 10
 
 ingress:
   ## If true, Ingress will be created.
   ##
   enabled: true
 
+  # Used to create Ingress record (should used with ServiceType: ClusterIP).
+  hosts:
+    - chart.local
+
   ## Ingress annotations
   ##
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   nginx.ingress.kubernetes.io/secure-backends: "true"
-  #   kubernetes.io/tls-acme: 'true'
-
-  ## Kubernetes Dashboard Ingress path
-  ##
-  path: /
-
-  ## Ingress hostnames
-  ## Must be provided if Ingress is enabled
-  ##
-  hosts:
-    - golang-http.preview.k8s.vidds.ee
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
 
   ## Ingress TLS configuration
   ## Secrets must be manually created in the namespace
   ##
   tls:
-    - secretName: golang-http-preview-k8s-vidds.ee-tls
+    - secretName: chart-tls
       hosts:
-        -  golang-http.preview.k8s.vidds.ee
+        - chart.local

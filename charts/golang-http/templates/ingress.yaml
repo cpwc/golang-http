@@ -1,43 +1,34 @@
 
 {{- if .Values.ingress.enabled -}}
-{{- $serviceName := include "fullname" . -}}
-{{- $servicePort := .Values.service.externalPort -}}
-{{- $path := .Values.ingress.path -}}
+{{- $serviceName := include "golang-http.fullname" . -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "golang-http.fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "golang-http.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   rules:
-  {{- if .Values.ingress.hosts }}
   {{- range $host := .Values.ingress.hosts }}
-    - host: {{ $host }}
-      http:
-        paths:
-          - path: {{ $path }}
-            backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
+  - host: {{ $host }}
+    http:
+      paths:
+        - path: {{ $ingressPath }}
+          backend:
+            serviceName: {{ $serviceName }}
+            servicePort: {{ $servicePort }}
   {{- end -}}
-  {{- else }}
-    - http:
-        paths:
-          - path: {{ $path }}
-            backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ $servicePort }}
-  {{- end -}}
-{{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
-{{- end -}}
+  {{- end -}}
 {{- end -}}

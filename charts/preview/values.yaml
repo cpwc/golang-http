@@ -1,21 +1,28 @@
-expose:
-  Annotations:
-    helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-delete-policy: hook-succeeded
-  config:
-    exposer: Ingress
-    http: true
-    tlsacme: true
-
-cleanup:
-  Args:
-    - --cleanup
-  Annotations:
-    helm.sh/hook: pre-delete
-    helm.sh/hook-delete-policy: hook-succeeded
-
 preview:
   image:
     repository:
     tag:
     pullPolicy: IfNotPresent
+
+  ingress:
+    ## If true, Ingress will be created.
+    ##
+    enabled: true
+
+    # Used to create Ingress record (should used with ServiceType: ClusterIP).
+    hosts:
+      - chart.local
+
+    ## Ingress annotations
+    ##
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+    tls:
+      - secretName: chart-tls
+        hosts:
+          - chart.local
