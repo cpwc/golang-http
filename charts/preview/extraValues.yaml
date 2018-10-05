@@ -1,0 +1,12 @@
+preview:
+  ingress:
+    enabled: true
+    hosts:
+      - chart.local
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    tls:
+      - secretName: chart-tls
+        hosts:
+          - chart.local
