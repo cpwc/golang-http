@@ -8,8 +8,11 @@ ifeq ($(OS),Darwin)
 else ifeq ($(OS),Linux)
 	sed -i -e "s/version:.*/version: $(PREVIEW_VERSION)/" Chart.yaml
 	sed -i -e "s/version:.*/version: $(PREVIEW_VERSION)/" ../*/Chart.yaml
-	sed -i -e "s|repository: .*|repository: $(DOCKER_REGISTRY)\/cpwc\/golang-http|" values.yaml
+	sed -i -e "s|repository: .*|repository: $(DOCKER_REGISTRY)\/viddsee-bot\/golang-http|" values.yaml
 	sed -i -e "s/tag: .*/tag: $(PREVIEW_VERSION)/" values.yaml
+	
+	sed -i -e "s/chart.local/$(PREVIEW_URL)/" ../*/values.yaml
+	sed -i -e "s/chart-tls/$(PREVIEW_TLS)/" ../*/values.yaml
 else
 	echo "platfrom $(OS) not supported to release from"
 	exit -1
