@@ -26,8 +26,8 @@ podAnnotations: {}
 podLabels: {}
 
 image:
-  repository: draft
-  tag: dev
+  repository: 337222843631.dkr.ecr.ap-southeast-1.amazonaws.com/viddsee-bot/golang-http
+  tag: 0.0.17
   pullPolicy: IfNotPresent
 
 service:
